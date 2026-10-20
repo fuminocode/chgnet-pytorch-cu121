@@ -1,0 +1,8 @@
+output/
+*.tar
+*.tar.gz
+*.sif
+.env
+.env.*
+.venv/
+__pycache__/

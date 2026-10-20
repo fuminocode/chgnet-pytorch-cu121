@@ -1,0 +1,88 @@
+name: Build CHGNet runtime image
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Push the completed runtime image to your Docker Hub repository
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wzz-chgnet-runtime
+  cancel-in-progress: false
+
+env:
+  IMAGE_NAME: ${{ vars.DOCKERHUB_IMAGE }}
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Check out environment recipe
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Check recipe and destination name
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 check_context.py
+          if [[ ! "$IMAGE_NAME" =~ ^[a-z0-9][a-z0-9._-]*/[a-z0-9][a-z0-9._-]*$ ]]; then
+            echo 'Set repository variable DOCKERHUB_IMAGE to namespace/repository, using lowercase.' >&2
+            exit 2
+          fi
+          df -h /
+          docker system df
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+        with:
+          buildkitd-config-inline: |
+            [worker.oci]
+              max-parallelism = 2
+
+      - name: Authenticate to Docker Hub
+        if: ${{ inputs.publish }}
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and optionally publish
+        id: build
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64
+          push: ${{ inputs.publish }}
+          tags: |
+            ${{ env.IMAGE_NAME }}:cu121-py311-${{ github.sha }}
+            ${{ env.IMAGE_NAME }}:cu121-py311-v1
+          cache-from: type=gha,scope=wzz-chgnet-cu121-runtime
+          cache-to: type=gha,mode=max,scope=wzz-chgnet-cu121-runtime
+          # Keep one target platform and a plain image manifest for this cluster.
+          provenance: false
+          sbom: false
+
+      - name: Record result
+        shell: bash
+        env:
+          BUILD_DIGEST: ${{ steps.build.outputs.digest }}
+          PUBLISHED: ${{ inputs.publish }}
+        run: |
+          set -euo pipefail
+          printf '## Runtime build\n\n' >> "$GITHUB_STEP_SUMMARY"
+          printf 'Image: `%s`\n\n' "$IMAGE_NAME" >> "$GITHUB_STEP_SUMMARY"
+          printf 'Published: `%s`\n\n' "$PUBLISHED" >> "$GITHUB_STEP_SUMMARY"
+          if [[ "$PUBLISHED" == true ]]; then
+            printf 'Pinned reference: `docker.io/%s@%s`\n\n' "$IMAGE_NAME" "$BUILD_DIGEST" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          printf 'CPU imports and versions were checked during build. GPU execution remains untested.\n' >> "$GITHUB_STEP_SUMMARY"

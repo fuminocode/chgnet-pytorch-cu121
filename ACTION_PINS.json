@@ -1,0 +1,22 @@
+{
+  "checkout": {
+    "repository": "actions/checkout",
+    "tag": "v4",
+    "commit": "11d5960a326750d5838078e36cf38b85af677262"
+  },
+  "buildx": {
+    "repository": "docker/setup-buildx-action",
+    "tag": "v3",
+    "commit": "8d2750c68a42422c14e847fe6c8ac0403b4cbd6f"
+  },
+  "login": {
+    "repository": "docker/login-action",
+    "tag": "v3",
+    "commit": "c94ce9fb468520275223c153574b00df6fe4bcc9"
+  },
+  "build": {
+    "repository": "docker/build-push-action",
+    "tag": "v6",
+    "commit": "10e90e3645eae34f1e60eeb005ba3a3d33f178e8"
+  }
+}

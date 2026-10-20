@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-20",
+  "scope": "runtime dependencies only; NO project research code/CIF/labels/project-trained weights/credentials",
+  "original_bundle_sha256": "f6c7e6f5079589e72af7182752d98bd185999e9cac36f58fd0d445f82edc4df8",
+  "base_image": "docker.io/library/python@sha256:4b4c524dc3dce996864e030c7bd9c6b0e517597189fee48f48e05b499442444b",
+  "python": "3.11.16",
+  "uv": "0.12.16",
+  "target_platform": "linux/amd64",
+  "dependencies_sha256": {
+    "pyproject.toml": "fb27b214c01ff6bfff1246382e4475020e63f4e799f98541e50ac9e7f03c76ed",
+    "uv.lock": "9f96ca34ebd306b753104261c2e397a6831b87db40c31cfc011974e47aa24b14"
+  },
+  "research_pretrained_weights_note": "CHGNet official distribution includes its public pretrained checkpoint; project-trained weights are excluded.",
+  "docker_present_in_active_WSL": false,
+  "windows_docker_not_detected": true,
+  "image_built": false,
+  "server_accessed": false,
+  "build_route": "GitHub Actions CPU build; Docker Hub publication only on manual publish=true",
+  "Docker_or_WSL_installation_required_locally": false
+}

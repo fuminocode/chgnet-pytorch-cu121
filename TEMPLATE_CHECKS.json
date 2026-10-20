@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-20",
+  "status": "template_static_and_boundary_checks_passed_NOT_built_NOT_published",
+  "checks": [
+    "Python_sources_parse",
+    "shell_and_embedded_Python_syntax",
+    "original_dependency_hashes_and_context_allowlist",
+    "workflow_manual_only_publish_opt_in_and_verified_action_pins",
+    "cluster_uses_complete_image_without_package_install_commands",
+    "read_only_path_check_and_external_image_checksum_symlink_rejection"
+  ],
+  "Docker_image_built": false,
+  "GitHub_repository_created": false,
+  "Actions_executed": false,
+  "DockerHub_pushed": false,
+  "cluster_connected": false,
+  "GPU_tested": false,
+  "local_Docker_or_WSL_installation_performed": false,
+  "scope": "No cache reuse experiments; no project datasets read by checks. Original dependency config hashes checked only."
+}
