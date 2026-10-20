@@ -1,4 +1,7 @@
-# 仅运行环境：GitHub Actions → Docker Hub → Apptainer
+# chgnet-pytorch-cu121
+
+CHGNet 0.3.8、PyTorch 2.5.1（CUDA 12.1）、pymatgen 2023.11.12 与
+Python 3.11 运行环境；支持 GitHub Actions 构建和 Apptainer / Slurm 集群运行。
 
 2026-10-20。本仓库只保存运行环境配方和集群启动脚本。
 本地无需安装Docker；镜像由GitHub Actions手动构建。上传文件不会触发构建或发布。
@@ -21,7 +24,8 @@ Dockerfile使用逐项COPY和.dockerignore白名单。科研代码和数据仍�
 
 本仓库根目录包含Dockerfile和.github/workflows/build-runtime.yml，
 可直接用于Actions。GitHub仓库与Docker Hub镜像仓库的公开/私有设置彼此独立。
-另行建立Docker Hub镜像仓库，例如你的命名空间/lisuperionic-runtime。
+另行建立Docker Hub镜像仓库，建议同样命名为chgnet-pytorch-cu121，
+完整镜像名为你的Docker Hub命名空间/chgnet-pytorch-cu121。
 
 不要上传本机虚拟环境、科研数据或token；令牌通过GitHub的Secrets界面配置。
 
@@ -31,7 +35,7 @@ Dockerfile使用逐项COPY和.dockerignore白名单。科研代码和数据仍�
 
 | 类型 | 名称 | 内容 |
 |---|---|---|
-| Variable | DOCKERHUB_IMAGE | 小写的命名空间/镜像仓库，例如你的用户名/lisuperionic-runtime |
+| Variable | DOCKERHUB_IMAGE | 小写的命名空间/镜像仓库，例如你的Docker Hub用户名/chgnet-pytorch-cu121 |
 | Secret | DOCKERHUB_USERNAME | Docker Hub登录用户名 |
 | Secret | DOCKERHUB_TOKEN | 对目标镜像仓库有推送权限的访问令牌 |
 
